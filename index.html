@@ -3,39 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bilingual Rental Agreement (V9 - Witness E-KYC Flow)</title>
+    <title>Smart Bilingual Rental Agreement (V8 - Auto-Watermark Collab)</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Sarabun -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* --- สไตล์ตอนคำสั่ง Print (Step 3) --- */
         @media print {
             .no-print { display: none !important; }
             body { background-color: #ffffff !important; margin: 0; padding: 0; }
             #step2 { display: block !important; margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
             #printable-contract { box-shadow: none !important; padding: 0 !important; width: 100% !important; border: none !important; }
-            @page { size: A4; margin: 15mm 15mm; }
+            
+            @page {
+                size: A4;
+                margin: 15mm 15mm;
+            }
             .page-break { page-break-before: always !important; break-before: page !important; }
             .contract-text { font-size: 14pt; line-height: 1.45; }
             .contract-h1 { font-size: 24pt; font-weight: bold; }
             .section-header { font-size: 15pt; font-weight: bold; background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .attachment-header { font-size: 16pt; font-weight: bold; text-align: center; margin-bottom: 15px; background-color: #f1f5f9 !important; padding: 8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .avoid-straddle { page-break-inside: avoid !important; break-inside: avoid !important; display: block; }
+            
+            .avoid-straddle {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                display: block;
+            }
         }
+
         .contract-text { font-size: 15px; line-height: 1.6; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
+    <!-- =========================================================================
+         STEP 1: หน้าฟอร์มตั้งค่าสัญญาโดย Agent/Admin (ซ่อนจากลูกค้าในอนาคต)
+         ========================================================================= -->
     <div id="step1" class="max-w-5xl mx-auto pt-8 px-4 sm:px-6">
+        
         <div class="bg-slate-900 text-white p-8 rounded-3xl shadow-xl mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border border-slate-800">
             <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono mb-2">
-                    <span>AGENT CONTROL DECK • RELEASE V9 (WITNESS KYC)</span>
+                    <span>AGENT CONTROL DECK • RELEASE V8 (E-KYC WATERMARK)</span>
                 </div>
                 <h1 class="text-3xl font-bold tracking-tight">ระบบตั้งค่าร่างสัญญาเช่า (สำหรับเจ้าหน้าที่)</h1>
+                <p class="text-slate-400 mt-1 text-sm">กรอกข้อมูลพื้นฐานให้ครบถ้วน ก่อนส่งลิงก์ให้ลูกค้า (Landlord / Tenant) เปิดดูและลงนาม</p>
             </div>
             <div class="bg-slate-800/90 border border-slate-700 px-4 py-3 rounded-2xl text-xs text-slate-300">
                 <span>📍 สถานที่ตั้งต้น:</span>
@@ -44,193 +67,1165 @@
         </div>
 
         <form id="rental-form" onsubmit="return false;" class="space-y-8">
+            
+            <!-- 1. อัปโหลดรูปภาพ (เฉพาะคู่สัญญาหลัก) -->
             <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
-                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">1. อัปโหลดเอกสารแนบท้าย <span class="text-base font-normal text-slate-500">(KYC Attachments)</span></h2>
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">
+                    1. อัปโหลดเอกสารแนบท้าย <span class="text-base font-normal text-slate-500">(KYC Attachments - Principals Only)</span>
+                </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="border-2 border-dashed border-slate-300 p-6 rounded-2xl flex flex-col items-center justify-center text-center bg-slate-50/50">
-                        <h3 class="font-semibold text-slate-800 text-sm">สำเนาบัตรประชาชน ผู้ให้เช่า</h3>
-                        <input type="file" id="in-landlord-img" accept="image/*" class="mt-3 block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:font-semibold file:bg-indigo-50 file:text-indigo-700">
-                        <div id="thumb-ll-box" class="mt-4 hidden w-full"><img id="thumb-ll" src="" class="h-28 w-full object-contain bg-white border rounded-xl p-1"></div>
+                    <div class="border-2 border-dashed border-slate-300 hover:border-indigo-500 transition-colors p-6 rounded-2xl flex flex-col items-center justify-center text-center bg-slate-50/50">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-base mb-2">1</div>
+                        <h3 class="font-semibold text-slate-800 text-sm">สำเนาบัตรประชาชน ผู้ให้เช่า <span class="block text-xs text-indigo-600">(Landlord's ID)</span></h3>
+                        <input type="file" id="in-landlord-img" accept="image/*" class="mt-3 block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:font-semibold file:bg-indigo-50 file:text-indigo-700 cursor-pointer">
+                        <div id="thumb-ll-box" class="mt-4 hidden w-full">
+                            <span class="text-xs text-emerald-600 font-semibold block mb-1">✔ พร้อมแนบท้าย</span>
+                            <img id="thumb-ll" src="" class="h-28 w-full object-contain bg-white border border-slate-200 rounded-xl p-1">
+                        </div>
                     </div>
-                    <div class="border-2 border-dashed border-slate-300 p-6 rounded-2xl flex flex-col items-center justify-center text-center bg-slate-50/50">
-                        <h3 class="font-semibold text-slate-800 text-sm">สำเนาพาสปอร์ต ผู้เช่า</h3>
-                        <input type="file" id="in-tenant-img" accept="image/*" class="mt-3 block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:font-semibold file:bg-emerald-50 file:text-emerald-700">
-                        <div id="thumb-tn-box" class="mt-4 hidden w-full"><img id="thumb-tn" src="" class="h-28 w-full object-contain bg-white border rounded-xl p-1"></div>
+                    <div class="border-2 border-dashed border-slate-300 hover:border-indigo-500 transition-colors p-6 rounded-2xl flex flex-col items-center justify-center text-center bg-slate-50/50">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-base mb-2">2</div>
+                        <h3 class="font-semibold text-slate-800 text-sm">สำเนาพาสปอร์ต ผู้เช่า <span class="block text-xs text-emerald-600">(Tenant's Passport)</span></h3>
+                        <input type="file" id="in-tenant-img" accept="image/*" class="mt-3 block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:font-semibold file:bg-emerald-50 file:text-emerald-700 cursor-pointer">
+                        <div id="thumb-tn-box" class="mt-4 hidden w-full">
+                            <span class="text-xs text-emerald-600 font-semibold block mb-1">✔ พร้อมแนบท้าย</span>
+                            <img id="thumb-tn" src="" class="h-28 w-full object-contain bg-white border border-slate-200 rounded-xl p-1">
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- 2. ข้อมูลทรัพย์สิน -->
             <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
-                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">2. ข้อมูลทรัพย์สิน & บุคคล</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                    <div><label class="block text-xs font-semibold">บ้านเลขที่</label><input type="text" id="in-prop-no" value="88/9" class="w-full px-3 py-2 rounded-xl border text-sm"></div>
-                    <div><label class="block text-xs font-semibold">โครงการ</label><input type="text" id="in-prop-project" value="Lalisa View" class="w-full px-3 py-2 rounded-xl border text-sm"></div>
-                    <div><label class="block text-xs font-semibold">อำเภอ</label><input type="text" id="in-prop-dist" value="หัวหิน" class="w-full px-3 py-2 rounded-xl border text-sm"></div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-slate-50 p-5 rounded-2xl">
-                        <label class="block text-xs font-semibold">ชื่อผู้ให้เช่า</label><input type="text" id="in-landlord-name" value="นาย หมีน้อย คอยรัก" class="w-full p-2 border rounded-lg">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">
+                    2. ข้อมูลทรัพย์สินที่ให้เช่า <span class="text-base font-normal text-slate-500">(The Leased Premises)</span>
+                </h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">บ้านเลขที่ (House No.)</label>
+                        <input type="text" id="in-prop-no" value="88/9" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm font-bold text-indigo-900 bg-indigo-50/30">
                     </div>
-                    <div class="bg-slate-50 p-5 rounded-2xl">
-                        <label class="block text-xs font-semibold">ชื่อผู้เช่า</label><input type="text" id="in-tenant-name" value="Mrs. Erika Mustermann" class="w-full p-2 border rounded-lg">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">โครงการ (Project)</label>
+                        <input type="text" id="in-prop-project" value="Lalisa View (ลลิสา วิว)" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">ตำบล (Sub-district)</label>
+                        <input type="text" id="in-prop-subdist" value="หินเหล็กไฟ" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">อำเภอ (District)</label>
+                        <input type="text" id="in-prop-dist" value="หัวหิน" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none text-sm font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">จังหวัด (Province)</label>
+                        <input type="text" id="in-prop-prov" value="ประจวบคีรีขันธ์" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสไปรษณีย์ (Zip)</label>
+                        <input type="text" id="in-prop-zip" value="77110" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none text-sm font-mono">
                     </div>
                 </div>
             </div>
 
-            <button type="button" onclick="generateContract()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-3xl shadow-xl">บันทึกข้อมูลและเปิดหน้าต่างลงนาม ➔</button>
+            <!-- 3. ข้อมูลบุคคล -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">
+                    3. ข้อมูลคู่สัญญา <span class="text-base font-normal text-slate-500">(The Parties)</span>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Landlord -->
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200/60">
+                        <h3 class="font-bold text-indigo-950 text-sm">ผู้ให้เช่า (Landlord)</h3>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600">ชื่อ-นามสกุล</label>
+                            <input type="text" id="in-landlord-name" value="นาย หมีน้อย คอยรัก" class="w-full px-3 py-1.5 rounded-lg border text-sm font-medium">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">เลขบัตรประชาชน</label>
+                                <input type="text" id="in-landlord-id" value="0 1234 56789 10 1" class="w-full px-3 py-1.5 rounded-lg border font-mono text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="in-landlord-phone" value="+66 89 123 4567" class="w-full px-3 py-1.5 rounded-lg border font-mono text-xs">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600">ที่อยู่ติดต่อ</label>
+                            <textarea id="in-landlord-address" rows="1" class="w-full px-3 py-1.5 rounded-lg border text-xs">2300 คาโลรามา วอชิงตัน ดี.ซี. 20007</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Tenant -->
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200/60">
+                        <h3 class="font-bold text-emerald-950 text-sm">ผู้เช่า (Tenant)</h3>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600">ชื่อ-นามสกุล (ตาม Passport)</label>
+                            <input type="text" id="in-tenant-name" value="Mrs. Erika Mustermann" class="w-full px-3 py-1.5 rounded-lg border text-sm font-medium">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">เลข Passport</label>
+                                <input type="text" id="in-tenant-id" value="C01X00T47" class="w-full px-3 py-1.5 rounded-lg border font-mono text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="in-tenant-phone" value="+49 151 2345 6789" class="w-full px-3 py-1.5 rounded-lg border font-mono text-xs">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">สัญชาติ (Nat.)</label>
+                                <input type="text" id="in-tenant-nat" value="Deutsch (German)" class="w-full px-3 py-1.5 rounded-lg border text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600">วันเกิด (DOB)</label>
+                                <input type="date" id="in-tenant-dob" value="1964-08-12" class="w-full px-2 py-1 rounded-lg border text-xs font-mono">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. การเงินและเวลา -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-600 pl-3 mb-6">
+                    4. กำหนดเวลา & ยอดชำระ <span class="text-base font-normal text-slate-500">(Terms & Financials)</span>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">สถานที่ทำสัญญา</label>
+                                <input type="text" id="in-location" value="อำเภอหัวหิน จ.ประจวบคีรีขันธ์" oninput="updateBannerLoc()" class="w-full px-3 py-2 rounded-xl border text-xs font-bold bg-indigo-50/30">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">วันที่ทำสัญญา</label>
+                                <input type="date" id="in-doc-date" class="w-full px-3 py-2 rounded-xl border text-xs font-mono">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 p-3 bg-indigo-50/40 rounded-2xl border border-indigo-100">
+                            <div>
+                                <label class="block text-[11px] font-bold text-indigo-950 uppercase mb-1">เริ่มเช่า (Start)</label>
+                                <input type="date" id="in-start-date" onchange="updateEndDate()" class="w-full px-2.5 py-1.5 rounded-lg border font-mono text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-indigo-950 uppercase mb-1">ระยะเวลา (Term)</label>
+                                <select id="in-duration" onchange="updateEndDate()" class="w-full px-2 py-1.5 rounded-lg border text-xs font-bold text-indigo-700 bg-white">
+                                    <option value="1m">1 เดือน (1 Month)</option>
+                                    <option value="3m">3 เดือน (3 Months)</option>
+                                    <option value="6m">6 เดือน (6 Months)</option>
+                                    <option value="1y" selected>1 ปี (1 Year)</option>
+                                    <option value="custom">กำหนดเอง (Custom)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200 flex flex-col gap-1">
+                            <label class="text-[11px] font-bold text-emerald-950 uppercase">ชำระค่าเช่าทุกๆ วันที่ (Monthly Payment Due Day)</label>
+                            <select id="in-due-date" class="w-full px-3 py-1.5 rounded-lg border border-emerald-300 font-bold text-xs text-emerald-900 bg-white"></select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">สิ้นสุดการเช่าอัตโนมัติ (Calculated End Date)</label>
+                            <input type="date" id="in-end-date" readonly class="w-full px-3 py-2 rounded-xl border bg-slate-100 font-mono text-xs font-bold text-slate-600">
+                        </div>
+                    </div>
+
+                    <!-- แผงคำนวณเงิน -->
+                    <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-lg space-y-5">
+                        <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+                            <span class="font-bold text-sm text-emerald-400">คำนวณยอดแรกเข้าสุทธิ (Upfront Payment)</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] text-slate-400 mb-1">ค่าเช่า/เดือน (Baht)</label>
+                                <input type="number" id="in-rent" value="30000" step="500" oninput="updateFinancials()" class="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] text-emerald-400 mb-1 truncate">ประกันค่าน้ำ/ไฟ/สิ่งของ</label>
+                                <select id="in-deposit-months" onchange="updateFinancials()" class="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-emerald-400 font-bold text-sm">
+                                    <option value="1">1 เดือน (1 Month)</option>
+                                    <option value="2" selected>2 เดือน (2 Months)</option>
+                                    <option value="3">3 เดือน (3 Months)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5 pt-2 text-xs">
+                            <div class="flex justify-between text-slate-300">
+                                <span>ค่าเช่าล่วงหน้า 1 เดือน:</span>
+                                <span id="lbl-rent-amt" class="font-mono font-bold text-white">30,000 THB</span>
+                            </div>
+                            <div class="flex justify-between text-slate-300">
+                                <span>เงินประกันฯ (<span id="lbl-dep-count">2</span> เดือน):</span>
+                                <span id="lbl-dep-amt" class="font-mono font-bold text-white">60,000 THB</span>
+                            </div>
+                            <div class="border-t border-slate-800 pt-3 flex flex-col items-end">
+                                <div class="w-full flex justify-between items-baseline">
+                                    <span class="text-xs font-bold text-amber-400">ได้รับเงินแล้วทั้งสิ้น:</span>
+                                    <span id="lbl-grand-total" class="text-xl font-extrabold text-amber-400 font-mono">90,000 THB</span>
+                                </div>
+                                <div id="lbl-baht-th" class="text-[11px] text-amber-200 mt-1 font-medium bg-amber-500/10 px-2 py-0.5 rounded">เก้าหมื่นบาทถ้วน</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="button" onclick="generateContract()" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] transition-all text-white font-bold py-4 px-8 rounded-3xl shadow-xl shadow-indigo-500/25 text-base flex items-center justify-center gap-2">
+                    <span>บันทึกข้อมูลและเปิดหน้าต่างลงนาม (Proceed to Live Signing Deck)</span>
+                    <span class="text-xl">➔</span>
+                </button>
+            </div>
+
         </form>
     </div>
 
+
+    <!-- =========================================================================
+         STEP 2: หน้าต่างลงนามร่วมกัน (Live Signing Deck & RBAC Controller)
+         ========================================================================= -->
     <div id="step2" class="max-w-5xl mx-auto px-4 sm:px-6 pt-6 hidden">
-        <div class="no-print sticky top-4 z-50 bg-slate-900/95 backdrop-blur border text-white px-5 py-3 rounded-2xl shadow-2xl mb-8 flex justify-between items-center">
-            <button onclick="goToStep1()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-xl">⬅️ กลับไปแก้</button>
-            <button onclick="window.print()" class="bg-emerald-500 px-5 py-1.5 rounded-xl text-xs font-extrabold">🖨️ พิมพ์ / ออกไฟล์ PDF</button>
+        
+        <!-- แผงควบคุมลอย -->
+        <div class="no-print sticky top-4 z-50 bg-slate-900/95 backdrop-blur border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl mb-8 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button id="btn-back-edit" onclick="goToStep1()" class="bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-slate-600 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all">
+                    <span>⬅️ กลับไปแก้ฟอร์ม</span>
+                </button>
+                <div class="h-4 w-[1px] bg-slate-700"></div>
+                <div class="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700">
+                    <span class="text-[11px] text-slate-400">สิทธิ์มุมมอง:</span>
+                    <select id="sim-view-mode" onchange="toggleRBAC()" class="bg-transparent text-amber-400 font-bold text-xs focus:outline-none cursor-pointer">
+                        <option value="admin">👨‍💻 1. แอดมิน (เซ็นได้ + สั่งพิมพ์ PDF ได้)</option>
+                        <option value="client">📱 2. ลูกค้า (ดูและเซ็นชื่อได้อย่างเดียว)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button onclick="shareContractLink()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 shadow transition-all">
+                    <span>🔗 ส่งลิงก์ให้ลูกค้า</span>
+                </button>
+                <button id="btn-print-pdf" onclick="window.print()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all">
+                    <span>🖨️ พิมพ์ / ออกไฟล์ PDF (Step 4)</span>
+                </button>
+            </div>
         </div>
 
-        <div id="printable-contract" class="bg-white p-8 sm:p-16 rounded-3xl shadow-2xl border space-y-8">
+        <!-- ตัวเอกสารสัญญา -->
+        <div id="printable-contract" class="bg-white text-black p-8 sm:p-16 rounded-3xl shadow-2xl border border-slate-200 space-y-8">
+            
             <div class="text-center border-b-2 border-slate-900 pb-5">
-                <h1 class="text-3xl font-bold text-blue-900">สัญญาเช่าที่พักอาศัย</h1>
-            </div>
-
-            <div id="contract-content">
-                </div>
-
-            <div class="pt-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div id="box-deck-landlord" class="p-4 bg-blue-50/40 rounded-2xl border">
-                        <div class="text-xs font-bold uppercase mb-2">ผู้ให้เช่า</div>
-                        <div id="sig-canvas-landlord" class="h-20 border-2 border-dashed flex items-center justify-center">
-                            <button onclick="openSigPad('landlord', 'ผู้ให้เช่า')" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl">✍️ กดเพื่อลงลายเซ็น</button>
-                        </div>
-                    </div>
-                    <div id="box-deck-tenant" class="p-4 bg-emerald-50/40 rounded-2xl border">
-                        <div class="text-xs font-bold uppercase mb-2">ผู้เช่า</div>
-                        <div id="sig-canvas-tenant" class="h-20 border-2 border-dashed flex items-center justify-center">
-                            <button onclick="openSigPad('tenant', 'ผู้เช่า')" class="bg-emerald-600 text-white text-xs px-4 py-2 rounded-xl">✍️ กดเพื่อลงลายเซ็น</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    <div id="box-deck-wit1_ll" class="p-4 bg-slate-50 rounded-2xl border">
-                        <div class="text-xs font-bold uppercase mb-2">พยานฝ่ายผู้ให้เช่า 1</div>
-                        <div id="sig-canvas-wit1_ll" class="h-20 border-2 border-dashed flex items-center justify-center">
-                            <button onclick="openSigPad('wit1_ll', 'พยานฝ่ายผู้ให้เช่า 1')" class="bg-slate-700 text-white text-xs px-4 py-2 rounded-xl">✍️ กดเพื่อลงลายเซ็น</button>
-                        </div>
-                    </div>
-                    <div id="box-deck-wit1_tn" class="p-4 bg-slate-50 rounded-2xl border">
-                        <div class="text-xs font-bold uppercase mb-2">พยานฝ่ายผู้เช่า 1</div>
-                        <div id="sig-canvas-wit1_tn" class="h-20 border-2 border-dashed flex items-center justify-center">
-                            <button onclick="openSigPad('wit1_tn', 'พยานฝ่ายผู้เช่า 1')" class="bg-slate-700 text-white text-xs px-4 py-2 rounded-xl">✍️ กดเพื่อลงลายเซ็น</button>
-                        </div>
-                    </div>
+                <h1 class="contract-h1 text-2xl sm:text-3xl font-bold text-blue-900">สัญญาเช่าที่พักอาศัย</h1>
+                <div class="text-xs font-bold text-slate-600 uppercase mt-0.5 tracking-widest">Residential Lease Agreement</div>
+                <div class="mt-4 flex justify-between items-center text-xs sm:text-sm font-medium text-slate-700">
+                    <span><b>สถานที่ทำสัญญา:</b> <span id="cv-location" class="font-bold text-blue-950"></span></span>
+                    <span><b>วันที่ทำสัญญา:</b> <span id="cv-doc-date" class="font-bold text-blue-800"></span></span>
                 </div>
             </div>
 
-            <div id="attachments-container"></div>
+            <!-- ข้อ 1: คู่สัญญา (แก้ไขจุดที่ 1 ลบข้อความวงเล็บท้ายออกแล้ว) -->
+            <div>
+                <div class="section-header text-base sm:text-lg font-bold text-blue-900 border-l-4 border-blue-900 pl-3 py-1 mb-4 bg-slate-50">
+                    1. ข้อมูลคู่สัญญา (The Parties)
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 contract-text mb-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                        <div class="font-bold text-blue-900 underline text-sm">ผู้ให้เช่า (Landlord):</div>
+                        <div><b>ชื่อ (Name):</b> <span id="cv-landlord-name" class="font-semibold">-</span></div>
+                        <div><b>ID No.:</b> <span id="cv-landlord-id" class="font-mono text-xs">-</span> | <b>Tel:</b> <span id="cv-landlord-phone" class="font-mono text-xs text-blue-700 font-semibold">-</span></div>
+                        <div><b>ที่อยู่ (Addr.):</b> <span id="cv-landlord-address" class="text-xs">-</span></div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                        <div class="font-bold text-emerald-900 underline text-sm">ผู้เช่า (Tenant):</div>
+                        <div><b>ชื่อ (Name):</b> <span id="cv-tenant-name" class="font-semibold">-</span></div>
+                        <div><b>Passport:</b> <span id="cv-tenant-id" class="font-mono text-xs">-</span> | <b>Tel:</b> <span id="cv-tenant-phone" class="font-mono text-xs text-emerald-700 font-semibold">-</span></div>
+                        <div><b>สัญชาติ:</b> <span id="cv-tenant-nat" class="text-xs">-</span> | <b>เกิด:</b> <span id="cv-tenant-dob" class="text-xs">-</span></div>
+                    </div>
+                </div>
+                <div class="text-center font-bold text-blue-950 text-xs sm:text-sm bg-blue-50/50 py-2 rounded-xl border border-blue-100">
+                    โดยที่ คู่สัญญาทั้งสองฝ่าย ตกลงกันดังนี้ (WHERE BY both parties agree as follows:)
+                </div>
+            </div>
+
+            <!-- ข้อ 2: ตารางเงิน -->
+            <div>
+                <div class="section-header text-base sm:text-lg font-bold text-blue-900 border-l-4 border-blue-900 pl-3 py-1 mb-4 bg-slate-50">
+                    2. สรุปภาระผูกพันทางการเงิน (Financial Summary)
+                </div>
+                <table class="w-full border-collapse border border-slate-300 contract-text text-sm sm:text-base">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-800 text-left">
+                            <th class="border border-slate-300 p-2.5 w-2/5">รายการ (Description)</th>
+                            <th class="border border-slate-300 p-2.5 w-3/5">รายละเอียดที่ตกลง (Agreed Terms)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-300">
+                        <tr>
+                            <td class="border border-slate-300 p-2.5"><b>อัตราค่าเช่าต่อเดือน</b><br><span class="text-xs text-slate-500">(Monthly Rental Fee)</span></td>
+                            <td class="border border-slate-300 p-2.5 font-bold text-blue-900"><span class="c-rent-amt">-</span> บาท/เดือน <span class="text-xs font-normal text-slate-600">(THB/Month)</span></td>
+                        </tr>
+                        <tr>
+                            <td class="border border-slate-300 p-2.5"><b>เงินประกันค่าน้ำ/ไฟ/อาคาร/สิ่งของ</b><br><span class="text-xs text-slate-500">(Security Deposit)</span></td>
+                            <td class="border border-slate-300 p-2.5 font-bold text-blue-900"><span class="c-dep-amt">-</span> บาท <span id="cv-dep-label" class="text-xs font-normal text-slate-600 block"></span></td>
+                        </tr>
+                        <tr class="bg-amber-50">
+                            <td class="border border-slate-300 p-2.5 text-blue-950 font-bold">ยอดชำระสุทธิในวันทำสัญญา<br><span class="text-xs text-slate-600">(Total Upfront Received)</span></td>
+                            <td class="border border-slate-300 p-2.5">
+                                <span id="cv-grand-total" class="text-lg font-extrabold text-blue-900">-</span>
+                                <div id="cv-baht-text-th" class="text-xs font-bold text-blue-800 mt-0.5">-</div>
+                                <div id="cv-baht-text-en" class="text-[11px] font-mono text-slate-600 mt-0.5">-</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ข้อ 3: ข้อตกลง 17 ข้อ -->
+            <div>
+                <div class="section-header text-base sm:text-lg font-bold text-blue-900 border-l-4 border-blue-900 pl-3 py-1 mb-4 bg-slate-50">
+                    3. ข้อตกลงและเงื่อนไขสำคัญแห่งสัญญา (Terms & Conditions of Agreement)
+                </div>
+                <ol class="list-decimal pl-5 space-y-4 contract-text text-justify text-sm sm:text-base">
+                    <li>
+                        <b>ทรัพย์สินที่เช่าและวัตถุประสงค์:</b> ผู้ให้เช่าถือกรรมสิทธิ์และมีสิทธิครอบครองบ้านเลขที่ <span class="font-bold text-blue-900 c-prop-no"></span> โครงการ <span class="font-bold text-blue-900 c-prop-project"></span> ตำบล <span class="font-bold text-blue-900 c-prop-subdist"></span> อำเภอ <span class="font-bold text-blue-900 c-prop-dist"></span> จังหวัด <span class="font-bold text-blue-900 c-prop-prov"></span> รหัสไปรษณีย์ <span class="font-bold text-blue-900 c-prop-zip"></span> ต่อไปนี้ในสัญญาเรียกว่า <b>“ทรัพย์สิน”</b> อัตราค่าเช่าเดือนละ <span class="font-bold text-blue-900 c-rent-amt"></span> บาท (<span class="font-bold text-blue-900 c-rent-th-txt"></span>) โดยมีวัตถุประสงค์เพื่อพักอาศัยหรือสำนักงานเท่านั้น<br>
+                        <span class="text-xs text-slate-600 block mt-0.5 leading-relaxed">
+                            <b>The Premises & Purpose:</b> The Lessor holds ownership and possession rights to House No. <span class="font-semibold text-slate-800 c-prop-no"></span>, Project <span class="font-semibold text-slate-800 c-prop-project"></span>, Sub-district <span class="font-semibold text-slate-800 c-prop-subdist"></span>, District <span class="font-semibold text-slate-800 c-prop-dist"></span>, Province <span class="font-semibold text-slate-800 c-prop-prov"></span>, Postal Code <span class="font-semibold text-slate-800 c-prop-zip"></span> (hereinafter called the <b>“Premises”</b>). The Lessor agrees to let the Premises and the Lessee agrees to rent the Premises from the Lessor. The rental fee shall be <span class="font-semibold text-slate-800 c-rent-amt"></span> Baht (<span class="font-semibold text-slate-800 c-rent-en-txt"></span>). The purpose of this agreement is to use the Premises as a residential home or office.
+                        </span>
+                    </li>
+                    <li>
+                        <b>ระยะเวลาการเช่า:</b> สัญญานี้มีข้อตกลงกัน มีกำหนดระยะเวลา <span class="font-bold text-blue-900 c-dur-th"></span> เริ่มต้นตั้งแต่วันที่ <span class="font-bold text-blue-900 c-start-th"></span> และหมดอายุสัญญาวันที่ <span class="font-bold text-blue-900 c-end-th"></span><br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Term of Agreement:</b> The term of this agreement shall be <span class="font-semibold text-slate-800 c-dur-en"></span>, commencing from <span class="font-semibold text-slate-800 c-start-en"></span> to <span class="font-semibold text-slate-800 c-end-en"></span>.</span>
+                    </li>
+                    <li>
+                        <b>การจ่ายเงินค่าเช่า:</b> ผู้เช่าจะต้องจ่ายเป็นจำนวนเงิน <span class="font-bold text-blue-900 c-rent-amt"></span> บาท/เดือน (<span class="font-bold text-blue-900 c-rent-th-txt"></span>) โดยจ่ายภายในวันที่ <span class="font-bold text-blue-900 underline c-due-th"></span> ของแต่ละเดือนปฏิทิน ซึ่งทั้งสองฝ่ายได้ตกลงกันไว้ ณ วันทำสัญญา<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Payment Schedule:</b> The payment of the rental fee shall be <span class="font-semibold text-slate-800 c-rent-amt"></span> Baht per month (<span class="font-semibold text-slate-800 c-rent-en-txt"></span>). The Tenant agrees to make payment not later than the <span class="font-semibold text-slate-800 underline c-due-en"></span> day of every calendar month to the Landlord paid upon Date.</span>
+                    </li>
+                    <li>
+                        <b>การชำระล่าช้าและสิทธิบอกเลิกสัญญา:</b> กรณีที่ผู้เช่าชำระค่าเช่าเดือนใดล่าช้า ผู้เช่ายอมจ่ายดอกเบี้ยในอัตราร้อยละ 1.25 ต่อเดือน ของจำนวนเงินค่าเช่าที่ค้างชำระ (คิดเป็นเงิน <span class="font-mono font-bold text-red-600 c-late-fee"></span> บาท/วัน) นับแต่วันที่ครบกำหนดชำระ แต่ไม่เกิน 10 วัน หากชำระล่าช้าเกิน 10 วันนับตั้งแต่วันที่ครบสัญญา จะถือว่าผู้เช่าผิดนัดผิดสัญญา และผู้ให้เช่ามีสิทธิบอกเลิกสัญญาได้ทันทีโดยมิต้องบอกกล่าวล่วงหน้าอีก และ/หรือ ระงับ หรือตกลงยินยอมให้ผู้ให้เช่ามีสิทธิที่จะดำเนินการงดหรือตัดการให้บริการต่างๆ ตามสัญญาให้บริการ เช่นระบบปรับอากาศ ระบบไฟฟ้า บริการโทรศัพท์หรือการสื่อสารอื่นๆ และบริการทั่วไป ที่จัดให้แก่ผู้เช่าหรือสถานที่เช่าได้ทันที ตามที่ผู้ให้เช่าเห็นสมควร โดยผู้เช่าจะไม่โต้แย้งคัดค้านและเรียกร้องค่าเสียหายใดๆ จากผู้ให้เช่าทั้งสิ้น และจะไม่เรียกค่าชดเชยใดๆ ทั้งสิ้น จากผู้ให้เช่าสำหรับความเสียหายหรือความไม่สะดวกที่เกิดขึ้นดังกล่าว<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Late Payment & Default:</b> Late payment any month shall be subject to interest at 1.25% per month on the unpaid amount calculated from the original due date (<span class="font-mono font-semibold text-red-800 c-late-fee"></span> Baht/day). Should the Tenant fail without justification to make rental payments by the due date not later than 10 days late payment, if tenant not pay in 10 days late the lease agreement will be finished. The Tenant may be deemed to be in default and the Landlord shall be entitled to immediately terminate this Agreement without prior notice, and/or to immediately suspend or terminate, in accordance with the Service Agreement, the various services, as he sees fit, and the Tenant shall not oppose nor contest such termination or suspension.</span>
+                    </li>
+                    <li>
+                        <b>เงินประกันค่าน้ำ/ไฟ/อาคาร/สิ่งของ:</b> ผู้เช่าได้มอบเงินประกันการเช่าเป็นเงินจำนวน <span class="font-bold text-blue-900 c-dep-amt"></span> บาท (<span class="font-bold text-blue-900 c-dep-th-txt"></span>) ซึ่งเป็นเงินประกันเพื่อเป็นการประกันการปฏิบัติการตามสัญญา และเป็นการประกันความเสียหายต่างๆ ที่อาจจะเกิดขึ้นแก่ทรัพย์สินที่เช่าเนื่องจากความผิดของผู้เช่าหรือบริวารของผู้เช่าซึ่งได้นำมาอาศัยอยู่ในทรัพย์สิน ถ้าผู้เช่าได้ปฏิบัติตามสัญญาถูกต้องเรียบร้อยและทรัพย์สินที่เช่าไม่ได้รับความเสียหายแต่อย่างใดแล้ว ผู้ให้เช่าจะคืนเงินจำนวนดังกล่าวให้แก่ผู้เช่าภายในเวลาไม่เกิน 10 วัน หลังจากสัญญาเช่าสิ้นสุดลง หากมีการยกเลิกสัญญาไม่ได้เกิดจากความผิดของผู้เช่า ผู้ให้เช่าตกลงจะคืนเงินประกันให้แก่ผู้เช่าหลังจากวันที่สัญญาสิ้นสุด หลังจากเช็คความเรียบร้อยของสถานที่ให้เช่าแล้ว<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Security Deposit for Water/Electricity/Building/Belongings:</b> The Lessee gives a deposit in the amount of <span class="font-semibold text-slate-800 c-dep-amt"></span> Baht (<span class="font-semibold text-slate-800 c-dep-en-txt"></span>) as security for any damage or loss the Lessor may suffer due to the breach. When this agreement ends and there is no damage to the Premises, the Lessor shall refund the deposit to the Lessee after checking the property. Notwithstanding the foregoing, if the termination is not caused by the Lessee’s fault, the deposit shall be refunded to the Lessee in full in less than 10 days. The Lessor rents the house assuming that all electricity, plumbing, and water systems are working well.</span>
+                    </li>
+                    <li>
+                        <b>ค่าสาธารณูปโภค:</b> ตลอดระยะเวลาในการเช่า ค่าน้ำประปา, ค่าโทรศัพท์, ค่าไฟฟ้า, อินเตอร์เน็ต และค่าเก็บขยะ หรือค่าใช้จ่ายอื่นใดอันเกิดจากผู้เช่า ไม่ว่าในกรณีใดๆ ทั้งสิ้น ผู้เช่าจะเป็นผู้รับผิดชอบ<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Utilities & Expenses:</b> The Lessee shall be responsible for the costs of electricity, gas, Internet, telephone, garbage collection, water per individual meter of usage at the Premises or any other expense incurred by the action of the Lessee in any event during the tenure of this agreement.</span>
+                    </li>
+                    <li>
+                        <b>การบำรุงรักษาทรัพย์สิน:</b> ผู้เช่าจะต้องรับผิดชอบต่อความเสียหาย และจะรักษาซ่อมแซมทรัพย์สินที่เช่าเหมือนเช่นบุคคลควรระวังรักษาทรัพย์สินของตน ยกเว้นความเสียหายเนื่องจากเสื่อมสภาพที่ยอมรับได้<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Premises Care:</b> The Lessee shall be responsible for any loss or damage caused to the Premises and furniture, fixtures and electrical appliances and shall maintain the Premises, as an ordinary prudent man shall do to his own property. Ordinary wear and tear is acceptable.</span>
+                    </li>
+                    <li>
+                        <b>ห้ามสิ่งของผิดกฎหมาย:</b> ผู้เช่าจะไม่นำสินค้า สิ่งของ วัสดุที่ผิดกฎหมายเข้ามาไว้หรือขาย หรือจำหน่ายในทรัพย์สินที่เช่า หรือเมื่อผู้ให้เช่าพิจารณาเห็นว่า สินค้าใด วัตถุ ไม่สมควรจะอยู่ในทรัพย์สินที่เช่า ผู้เช่าต้องขนย้ายสิ่งของนั้นๆ ออกไปจากทรัพย์สินที่เช่าทันทีด้วยค่าใช้จ่ายของผู้เช่าเอง<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Prohibited Materials:</b> The Lessee is not allowed to bring any illegal materials to keep or sell in the Premises. In case the Lessor considers any material improper to be kept or sold in the Premises, the Lessee must move out such material at its own cost.</span>
+                    </li>
+                    <li>
+                        <b>ความสูญหายของทรัพย์สินผู้เช่า:</b> ผู้ให้เช่าไม่ต้องรับผิดชอบต่อความเสียหาย หรือสูญหายแก่ทรัพย์สินที่ผู้เช่านำมาไว้ในทรัพย์สินที่เช่า<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Lessor's Non-Liability:</b> The Lessor shall not be responsible for any loss or damage to the property of the Lessee.</span>
+                    </li>
+                    <li>
+                        <b>การห้ามโอนสิทธิและห้ามใช้ผิดกฎหมาย:</b> ห้ามมิให้ผู้เช่านำทรัพย์ที่เช่าทั้งหมดหรือบางส่วนไปให้บุคคลอื่นหรือโอนสิทธิการเช่าให้แก่บุคคลอื่น เว้นแต่จะได้รับอนุญาตเป็นลายลักษณ์อักษรจากผู้ให้เช่า ซึ่งความยินยอมดังกล่าวจะต้องไม่ถูกยับยั้ง มีเงื่อนไข หรือทำให้ล่าช้าโดยไม่มีเหตุอันควร และห้ามผู้เช่านำทรัพย์สินที่เช่าตามสัญญานี้ไปประกอบกิจการอันผิดกฎหมาย ศีลธรรม ขนบธรรมเนียม หรือทำให้บ้านใกล้เคียงได้รับความเดือดร้อนโดยเด็ดขาด<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Assignment, Subletting & Disturbing Use:</b> The Lessee is not allowed to assign or sublet the Premises or any part thereof without prior written consent of the Lessor. The Lessee is also not allowed to use the Premises for unlawful, immoral, unusual, or disturbing purposes.</span>
+                    </li>
+                    <li>
+                        <b>การต่อเติมดัดแปลงอาคาร:</b> หากผู้เช่าประสงค์จะต่อเติมดัดแปลง ซ่อมแซม ตกแต่งส่วนหนึ่งส่วนใดของทรัพย์สินที่เช่านับถัดจากวันที่สัญญาเช่ามีผลผูกพันเป็นต้นไป ผู้เช่าต้องกระทำด้วยค่าใช้จ่ายของผู้เช่าเองทั้งสิ้น และต้องได้รับความยินยอมเป็นลายลักษณ์อักษรจากผู้ให้เช่าก่อน ซึ่งความยินยอมดังกล่าวจะต้องไม่ถูกยับยั้ง มีเงื่อนไข หรือทำให้ล่าช้าโดยไม่มีเหตุอันควร หากมีการยกเลิกสัญญาหรือสัญญาสิ้นสุด สิ่งใดที่เป็นการต่อเติม ดัดแปลง ซ่อมแซม หรือตกแต่งถาวร ผู้เช่าตกลงมอบกรรมสิทธิ์ในสิ่งนั้นให้แก่ผู้ให้เช่า สิ่งใดที่เป็นการต่อเติมดัดแปลง ซ่อมแซม ตกแต่งชั่วคราว ผู้เช่าจะรื้อถอนและขนย้ายออกไปจากทรัพย์สินที่เช่าด้วยค่าใช้จ่ายของผู้เช่าเอง<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Modifications & Alterations:</b> The Lessee shall not make any modification to any part of the Premises without the prior written consent of the Lessor. If the Lessee modifies the permanent structure of the Premises or decorates following the given consent, the Lessee agrees to transfer the ownership of the modified or decorated property to the Lessor. Any temporary structure added with the consent of the Lessor at the expense of the Lessee will be removed and retained by the Lessee at the termination of this Agreement.</span>
+                    </li>
+                    <li>
+                        <b>ผลของการเลิกสัญญาและการขนย้าย:</b> หากผู้เช่าประพฤติผิดสัญญา หรือหากสัญญาเช่าต้องเลิกกัน ผู้เช่าต้องขนย้ายสินค้า วัตถุ สิ่งของรวมทั้งบริวารออกไปจากทรัพย์สินภายใน 24 ชั่วโมง นับจากวันที่สัญญานี้เลิกกัน หากผู้เช่าไม่ยอมเลิกใช้ประโยชน์ หรือไม่ยอมขนทรัพย์สินและบริวารออกไปจากที่เช่าดังกล่าว ผู้ให้เช่ามีสิทธิริบเงินประกัน และมีสิทธิเข้าครอบครองทรัพย์ที่เช่าได้ทันที และ/หรือ ระงับ หรือตกลงยินยอมให้ผู้ให้เช่ามีสิทธิที่จะเข้าใช้พื้นที่ล็อกกุญแจประตูรั้วบ้าน ดำเนินการงดหรือตัดการให้บริการต่างๆ ตามสัญญาให้บริการ เช่นระบบปรับอากาศ ระบบไฟฟ้า บริการโทรศัพท์หรือการสื่อสารอื่นๆ และบริการทั่วไป ที่จัดให้แก่ผู้เช่าหรือสถานที่เช่าได้ทันที ตามที่ผู้ให้เช่าเห็นสมควร โดยผู้เช่าจะไม่โต้แย้งคัดค้านและเรียกร้องค่าเสียหายใดๆ จากผู้ให้เช่าทั้งสิ้น และจะไม่เรียกค่าชดเชยใดๆ ทั้งสิ้น จากผู้ให้เช่าสำหรับความเสียหายหรือความไม่สะดวกที่เกิดขึ้นดังกล่าว<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Eviction & Repossession:</b> If the Lessee infringes any section of this agreement, or the agreement ends for whatever reason, the Lessee will move out, at its own cost, all of its belongings, possessions, as well as its dependents from the Premises in 24 hours since the date of termination. The Lessor shall have the right to seize the deposit and repossess the property, and/or suspend or agree to allow the Lessor to have the right to access the door lock area, proceed to suspend or cut off the services according to the service contract immediately as the Lessor deems appropriate, where the Tenant will not dispute, challenge and claim any damages from the Lessor.</span>
+                    </li>
+                    <li>
+                        <b>การแก้ไขสัญญา:</b> ในกรณีใดๆ ก็ตาม จะไม่ถือว่ามีการแก้ไขเปลี่ยนแปลงข้อตกลงใดๆ ในสัญญานี้ เว้นแต่การแก้ไขเปลี่ยนแปลงนั้นจะเป็นลายลักษณ์อักษร และลงลายมือชื่อโดยคู่สัญญาทั้งสองฝ่าย<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Written Amendments:</b> Any changes or modifications to this agreement must be done in writing and signed by both parties.</span>
+                    </li>
+                    <li>
+                        <b>ความเสียหายจากภัยธรรมชาติ:</b> ภายใต้บังคับข้อ 6 แห่งสัญญานี้ ผู้ให้เช่าตกลงซ่อมแซมในส่วนความเสียหายของทรัพย์สินหลัก ซึ่งไม่ได้เกิดจากการกระทำของผู้เช่า เช่น แผ่นดินไหว พายุ น้ำท่วม หรือภัยจากสงคราม<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Major Structural Damages:</b> Notwithstanding section 6, the Lessor shall be responsible for damage to building or contents in storage caused by natural phenomena such as earthquakes, storms or floods, as well as damage caused by war.</span>
+                    </li>
+                    <li>
+                        <b>การซ่อมแซมย่อย:</b> ผู้เช่าตกลงที่จะซ่อมแซมทรัพย์สินที่ไม่ใช่ความเสียหายหลัก เช่น หลอดไฟขาด หรือสายโทรศัพท์ขาด เป็นต้น<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Minor Maintenance:</b> The Lessee shall be responsible for maintenance; for example, when a light bulb goes out, a telephone cord wears out, etc.</span>
+                    </li>
+                    <li>
+                        <b>คนกลางไกล่เกลี่ยข้อพิพาท:</b> กรณีที่มีการละเมิดสัญญาเกิดขึ้น เพื่อความเป็นธรรมแก่ทั้งสองฝ่าย จะต้องมีบุคคลที่สาม คือเจ้าหน้าที่ที่มีความเป็นกลางไม่มีความเกี่ยวข้องสัมพันธ์กับฝ่ายหนึ่งฝ่ายใดเป็นพิเศษ และต้องมาจากการตกลงระหว่างทั้งสองฝ่าย มาเป็นผู้พิจารณาตัดสิน<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Dispute Mediator:</b> In the case of a breach of contract, a mediator shall be used to settle the matter. This mediator shall be a third person that does not have a special relationship with either party and does not side with anyone.</span>
+                    </li>
+                    <li>
+                        <b>การส่งมอบและประกันอัคคีภัย:</b> ผู้ให้เช่าตกลงส่งมอบสถานที่เช่าในสภาพปัจจุบันให้แก่ผู้เช่า และผู้เช่าตกลงทำประกันอัคคีภัยทรัพย์สินที่เช่าตามสัญญานี้ด้วยค่าใช้จ่ายของผู้เช่าเอง<br>
+                        <span class="text-xs text-slate-600 block mt-0.5"><b>Delivery & Fire Insurance:</b> The Lessor shall deliver the Premises in current condition to the Lessee, and the Lessee agrees to insure the leased property against fire at its own expense.</span>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- =========================================================================
+                 [แก้ไขจุดที่ 2!] แผงลงลายเซ็นแบบ Flex-Row Stack พร้อมปุ่มแนบบัตรพยาน (จุดที่ 1)
+                 ========================================================================= -->
+            <div class="pt-6 avoid-straddle" style="page-break-inside: avoid;">
+                <div class="text-center font-semibold contract-text mb-6 text-slate-800 border-t border-slate-300 pt-6">
+                    คู่สัญญาได้อ่านและเข้าใจข้อความในสัญญาโดยละเอียดแล้ว จึงได้ลงนามผ่านระบบอิเล็กทรอนิกส์ไว้เป็นหลักฐานต่อหน้าพยาน<br>
+                    <span class="text-xs text-slate-500 font-normal">(Both parties have read and fully understood the terms herein and execute this digital agreement in the presence of witnesses.)</span>
+                </div>
+
+                <div class="space-y-6 text-center contract-text">
+                    
+                    <!-- แถวที่ 1: คู่สัญญาหลัก -->
+                    <div class="flex flex-col sm:flex-row gap-6 justify-between avoid-straddle" style="page-break-inside: avoid;">
+                        <!-- 1. ผู้ให้เช่า -->
+                        <div id="box-deck-landlord" class="w-full sm:w-1/2 space-y-2 bg-blue-50/40 p-4 rounded-2xl border border-blue-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-blue-900 uppercase tracking-wider block">ผู้ให้เช่า (Lessor / Landlord)</div>
+                            <div id="sig-canvas-landlord" class="h-20 border-2 border-dashed border-blue-400 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('landlord', 'ผู้ให้เช่า (Landlord)')" class="sig-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-landlord" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-blue-900 font-bold">-</span> )</b>
+                            </div>
+                        </div>
+
+                        <!-- 2. ผู้เช่า -->
+                        <div id="box-deck-tenant" class="w-full sm:w-1/2 space-y-2 bg-emerald-50/40 p-4 rounded-2xl border border-emerald-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-emerald-900 uppercase tracking-wider block">ผู้เช่า (Lessee / Tenant)</div>
+                            <div id="sig-canvas-tenant" class="h-20 border-2 border-dashed border-emerald-400 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('tenant', 'ผู้เช่า (Tenant)')" class="sig-btn bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-tenant" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-emerald-900 font-bold">-</span> )</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- แถวที่ 2: พยานคนที่ 1 -->
+                    <div class="flex flex-col sm:flex-row gap-6 justify-between avoid-straddle" style="page-break-inside: avoid;">
+                        <!-- 3. พยานฝ่ายผู้ให้เช่า 1 -->
+                        <div id="box-deck-wit1_ll" class="w-full sm:w-1/2 space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-slate-700 uppercase tracking-wider block">พยานฝ่ายผู้ให้เช่า 1 (Lessor Witness 1)</div>
+                            <div id="sig-canvas-wit1_ll" class="h-20 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('wit1_ll', 'พยานฝ่ายผู้ให้เช่า 1')" class="sig-btn bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-wit1_ll" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-slate-800 font-bold">-</span> )</b>
+                            </div>
+                            <!-- [แก้ไขจุดที่ 1] ปุ่มแนบรูปบัตร ปชช. พยาน (ปรากฏเฉพาะหน้า 2) -->
+                            <div class="pt-1.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 font-medium">สำเนาบัตรฯ:</span>
+                                <label class="cursor-pointer inline-flex items-center gap-1 hover:opacity-80 transition-opacity">
+                                    <input type="file" accept="image/*" class="hidden" onchange="uploadWitnessId(event, 'wit1_ll')">
+                                    <span id="badge-wit1_ll" class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-lg border border-slate-300 text-[11px] shadow-sm flex items-center gap-1">
+                                        <span>📎 แนบรูปบัตร</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 4. พยานฝ่ายผู้เช่า 1 -->
+                        <div id="box-deck-wit1_tn" class="w-full sm:w-1/2 space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-slate-700 uppercase tracking-wider block">พยานฝ่ายผู้เช่า 1 (Lessee Witness 1)</div>
+                            <div id="sig-canvas-wit1_tn" class="h-20 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('wit1_tn', 'พยานฝ่ายผู้เช่า 1')" class="sig-btn bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-wit1_tn" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-slate-800 font-bold">-</span> )</b>
+                            </div>
+                            <!-- [แก้ไขจุดที่ 1] ปุ่มแนบรูปบัตร ปชช. พยาน (ปรากฏเฉพาะหน้า 2) -->
+                            <div class="pt-1.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 font-medium">สำเนาบัตรฯ:</span>
+                                <label class="cursor-pointer inline-flex items-center gap-1 hover:opacity-80 transition-opacity">
+                                    <input type="file" accept="image/*" class="hidden" onchange="uploadWitnessId(event, 'wit1_tn')">
+                                    <span id="badge-wit1_tn" class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-lg border border-slate-300 text-[11px] shadow-sm flex items-center gap-1">
+                                        <span>📎 แนบรูปบัตร</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- แถวที่ 3: พยานคนที่ 2 -->
+                    <div class="flex flex-col sm:flex-row gap-6 justify-between avoid-straddle" style="page-break-inside: avoid;">
+                        <!-- 5. พยานฝ่ายผู้ให้เช่า 2 -->
+                        <div id="box-deck-wit2_ll" class="w-full sm:w-1/2 space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-slate-700 uppercase tracking-wider block">พยานฝ่ายผู้ให้เช่า 2 (Lessor Witness 2)</div>
+                            <div id="sig-canvas-wit2_ll" class="h-20 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('wit2_ll', 'พยานฝ่ายผู้ให้เช่า 2')" class="sig-btn bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-wit2_ll" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-slate-800 font-bold">-</span> )</b>
+                            </div>
+                            <!-- [แก้ไขจุดที่ 1] ปุ่มแนบรูปบัตร ปชช. พยาน (ปรากฏเฉพาะหน้า 2) -->
+                            <div class="pt-1.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 font-medium">สำเนาบัตรฯ:</span>
+                                <label class="cursor-pointer inline-flex items-center gap-1 hover:opacity-80 transition-opacity">
+                                    <input type="file" accept="image/*" class="hidden" onchange="uploadWitnessId(event, 'wit2_ll')">
+                                    <span id="badge-wit2_ll" class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-lg border border-slate-300 text-[11px] shadow-sm flex items-center gap-1">
+                                        <span>📎 แนบรูปบัตร</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 6. พยานฝ่ายผู้เช่า 2 -->
+                        <div id="box-deck-wit2_tn" class="w-full sm:w-1/2 space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between avoid-straddle" style="page-break-inside: avoid;">
+                            <div class="text-xs font-bold text-slate-700 uppercase tracking-wider block">พยานฝ่ายผู้เช่า 2 (Lessee Witness 2)</div>
+                            <div id="sig-canvas-wit2_tn" class="h-20 border-2 border-dashed border-slate-300 bg-white rounded-xl flex items-center justify-center p-1">
+                                <button onclick="openSigPad('wit2_tn', 'พยานฝ่ายผู้เช่า 2')" class="sig-btn bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-all flex items-center gap-1.5">
+                                    <span>✍️ กดเพื่อลงลายเซ็น</span>
+                                </button>
+                            </div>
+                            <div class="leading-tight pt-1">
+                                <b class="text-slate-900 font-medium">( <span id="sig-name-wit2_tn" class="border-b border-dotted border-slate-500 inline-block min-w-[140px] pb-0.5 text-slate-800 font-bold">-</span> )</b>
+                            </div>
+                            <!-- [แก้ไขจุดที่ 1] ปุ่มแนบรูปบัตร ปชช. พยาน (ปรากฏเฉพาะหน้า 2) -->
+                            <div class="pt-1.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 font-medium">สำเนาบัตรฯ:</span>
+                                <label class="cursor-pointer inline-flex items-center gap-1 hover:opacity-80 transition-opacity">
+                                    <input type="file" accept="image/*" class="hidden" onchange="uploadWitnessId(event, 'wit2_tn')">
+                                    <span id="badge-wit2_tn" class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-lg border border-slate-300 text-[11px] shadow-sm flex items-center gap-1">
+                                        <span>📎 แนบรูปบัตร</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- =========================================================================
+                 [แก้ไขจุดที่ 2!] ภาคผนวกทั้ง 6 แผ่น (รองรับการ Stamp ลายเซ็นทับบัตร ปชช.)
+                 ========================================================================= -->
+            
+            <!-- แผ่นที่ 1: บัตรประชาชนผู้ให้เช่า -->
+            <div class="page-break pt-8">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 1: สำเนาบัตรประจำตัวประชาชน ผู้ให้เช่า<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 1: Landlord's ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ข้าพเจ้า <span id="cv-attach-ll-name" class="font-bold">-</span> ขอรับรองว่าเอกสารฉบับนี้เป็นสำเนาที่ถูกต้องแท้จริง ใช้สำหรับแนบประกอบสัญญาเช่าบ้านเท่านั้น<br>
+                    <span class="text-xs text-slate-500">(I hereby certify that this is a true and correct copy of my ID card, strictly for this lease agreement.)</span>
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-landlord" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-landlord" class="text-slate-400 font-semibold text-sm sm:text-base border-2 border-dashed border-slate-300 p-12 rounded-xl text-center">
+                        [ ผู้ใช้ยังไม่ได้อัปโหลดรูปภาพสำเนาบัตรประจำตัวประชาชนผู้ให้เช่า ]
+                    </div>
+                    <!-- THE REALISTIC WATERMARK OVERLAY (Z-20) -->
+                    <div id="wm-group-landlord" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อใช้ประกอบสัญญาเช่าเท่านั้น</span>
+                        <img id="wm-sig-landlord" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-landlord" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แผ่นที่ 2: พาสปอร์ตผู้เช่า -->
+            <div class="page-break pt-8">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 2: สำเนาหนังสือเดินทาง ผู้เช่า<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 2: Tenant's Passport/ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ข้าพเจ้า <span id="cv-attach-tn-name" class="font-bold">-</span> ขอรับรองว่าเอกสารฉบับนี้เป็นสำเนาที่ถูกต้องแท้จริง ใช้สำหรับแนบประกอบสัญญาเช่าบ้านเท่านั้น<br>
+                    <span class="text-xs text-slate-500">(I hereby certify that this is a true and correct copy of my passport/ID, strictly for this lease agreement.)</span>
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-tenant" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-tenant" class="text-slate-400 font-semibold text-sm sm:text-base border-2 border-dashed border-slate-300 p-12 rounded-xl text-center">
+                        [ ผู้ใช้ยังไม่ได้อัปโหลดรูปภาพสำเนาพาสปอร์ตผู้เช่า ]
+                    </div>
+                    <!-- THE REALISTIC WATERMARK OVERLAY (Z-20) -->
+                    <div id="wm-group-tenant" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อใช้ประกอบสัญญาเช่าเท่านั้น</span>
+                        <img id="wm-sig-tenant" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-tenant" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แผ่นที่ 3: บัตรพยานฝ่ายผู้ให้เช่า 1 -->
+            <div id="sheet-wit1_ll" class="page-break pt-8 hidden">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 3: สำเนาบัตรประจำตัวประชาชน พยานฝ่ายผู้ให้เช่า 1<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 3: Landlord Witness 1 ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ใช้สำหรับแนบเป็นหลักฐานพยานประกอบสัญญาเช่าที่พักอาศัยฉบับนี้เท่านั้น
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-wit1_ll" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-wit1_ll" class="hidden"></div>
+                    <!-- WATERMARK -->
+                    <div id="wm-group-wit1_ll" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อเป็นหลักฐานพยานเท่านั้น</span>
+                        <img id="wm-sig-wit1_ll" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-wit1_ll" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แผ่นที่ 4: บัตรพยานฝ่ายผู้เช่า 1 -->
+            <div id="sheet-wit1_tn" class="page-break pt-8 hidden">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 4: สำเนาบัตรประจำตัวประชาชน พยานฝ่ายผู้เช่า 1<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 4: Tenant Witness 1 ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ใช้สำหรับแนบเป็นหลักฐานพยานประกอบสัญญาเช่าที่พักอาศัยฉบับนี้เท่านั้น
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-wit1_tn" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-wit1_tn" class="hidden"></div>
+                    <!-- WATERMARK -->
+                    <div id="wm-group-wit1_tn" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อเป็นหลักฐานพยานเท่านั้น</span>
+                        <img id="wm-sig-wit1_tn" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-wit1_tn" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แผ่นที่ 5: บัตรพยานฝ่ายผู้ให้เช่า 2 -->
+            <div id="sheet-wit2_ll" class="page-break pt-8 hidden">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 5: สำเนาบัตรประจำตัวประชาชน พยานฝ่ายผู้ให้เช่า 2<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 5: Landlord Witness 2 ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ใช้สำหรับแนบเป็นหลักฐานพยานประกอบสัญญาเช่าที่พักอาศัยฉบับนี้เท่านั้น
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-wit2_ll" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-wit2_ll" class="hidden"></div>
+                    <!-- WATERMARK -->
+                    <div id="wm-group-wit2_ll" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อเป็นหลักฐานพยานเท่านั้น</span>
+                        <img id="wm-sig-wit2_ll" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-wit2_ll" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- แผ่นที่ 6: บัตรพยานฝ่ายผู้เช่า 2 -->
+            <div id="sheet-wit2_tn" class="page-break pt-8 hidden">
+                <div class="attachment-header">
+                    เอกสารแนบท้าย 6: สำเนาบัตรประจำตัวประชาชน พยานฝ่ายผู้เช่า 2<br>
+                    <span class="text-sm font-normal text-slate-600">(Attachment 6: Tenant Witness 2 ID Copy)</span>
+                </div>
+                <div class="text-center mb-4 contract-text leading-snug">
+                    ใช้สำหรับแนบเป็นหลักฐานพยานประกอบสัญญาเช่าที่พักอาศัยฉบับนี้เท่านั้น
+                </div>
+                <div class="border-2 border-slate-300 rounded-2xl p-4 min-h-[500px] flex items-center justify-center bg-slate-50 relative overflow-hidden">
+                    <img id="print-img-wit2_tn" src="" class="max-w-full max-h-[650px] object-contain hidden z-10">
+                    <div id="print-no-wit2_tn" class="hidden"></div>
+                    <!-- WATERMARK -->
+                    <div id="wm-group-wit2_tn" class="absolute z-20 pointer-events-none hidden flex flex-col items-center justify-center p-4 rounded-xl max-w-md text-center transform -rotate-12 bg-white/40 backdrop-blur-[1px] border border-white/50 shadow-sm" style="mix-blend-mode: multiply;">
+                        <span class="text-red-600 font-bold text-sm tracking-wider border-b border-red-500 pb-0.5 mb-1">สำเนาถูกต้อง เพื่อเป็นหลักฐานพยานเท่านั้น</span>
+                        <img id="wm-sig-wit2_tn" src="" class="max-h-24 w-auto my-1 filter drop-shadow">
+                        <span id="wm-name-wit2_tn" class="text-blue-900 font-extrabold text-xl tracking-tight"></span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div id="modal-sigpad" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 space-y-4">
-            <h3 id="pad-title" class="font-bold text-lg">ลงนามอิเล็กทรอนิกส์</h3>
+
+    <!-- =========================================================================
+         [POPUP MODAL] กระดานลงลายเซ็น HTML5 Canvas
+         ========================================================================= -->
+    <div id="modal-sigpad" class="no-print fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
             
-            <div id="witness-kyc-box" class="hidden border-b pb-4">
-                <label class="block text-xs font-bold text-slate-700 mb-2">📎 แนบรูปบัตรประชาชน (Required for Witness)</label>
-                <input type="file" id="pad-witness-id" accept="image/*" onchange="previewWitnessId(event)" class="w-full text-xs border p-2 rounded-xl">
-                <img id="witness-id-preview" class="mt-2 h-20 w-full object-contain hidden border rounded">
+            <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+                <div>
+                    <span class="text-xs font-mono text-indigo-400 block">SECURE CANVAS ENGINE</span>
+                    <h3 id="pad-title" class="font-bold text-lg">ลงนามอิเล็กทรอนิกส์</h3>
+                </div>
+                <button onclick="closeSigPad()" class="text-slate-400 hover:text-white text-xl font-bold px-2 py-0.5 rounded-lg bg-slate-800">✕</button>
             </div>
 
-            <input type="text" id="pad-printed-name" placeholder="พิมพ์ชื่อ-นามสกุล ตัวบรรจง" class="w-full px-4 py-2.5 rounded-xl border">
-            
-            <div class="border-2 rounded-2xl overflow-hidden bg-slate-50">
-                <canvas id="canvas-surface" width="460" height="150" class="w-full h-40 cursor-crosshair"></canvas>
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">1. พิมพ์ชื่อ-นามสกุล ตัวบรรจง (Printed Name)</label>
+                    <input type="text" id="pad-printed-name" placeholder="เช่น: นาย หมีน้อย คอยรัก" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold text-blue-900">
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-xs font-bold text-slate-700 uppercase">2. ใช้นิ้วหรือเมาส์วาดลายเซ็นด้านล่าง (Draw Signature)</label>
+                        <button type="button" onclick="clearSigCanvas()" class="text-xs text-red-600 hover:text-red-700 font-bold px-2 py-0.5 rounded bg-red-50">🗑️ ล้างกระดาน</button>
+                    </div>
+                    <div class="border-2 border-slate-300 rounded-2xl overflow-hidden bg-slate-50 relative touch-none">
+                        <canvas id="canvas-surface" width="460" height="200" class="w-full h-48 cursor-crosshair"></canvas>
+                        <span class="absolute bottom-2 right-3 text-[10px] font-mono text-slate-300 pointer-events-none">HTML5 Canvas</span>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeSigPad()" class="w-1/3 bg-slate-200 hover:bg-slate-300 font-bold text-slate-700 py-3 rounded-2xl text-sm transition-all">ยกเลิก</button>
+                    <button type="button" onclick="commitSignature()" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] font-bold text-white py-3 rounded-2xl text-sm shadow-lg shadow-indigo-500/25 transition-all">✔ ประทับลายเซ็นลงสัญญา</button>
+                </div>
             </div>
 
-            <div class="flex gap-3">
-                <button onclick="closeSigPad()" class="w-1/3 bg-slate-200 py-3 rounded-2xl font-bold">ยกเลิก</button>
-                <button onclick="commitSignature()" class="w-2/3 bg-indigo-600 text-white py-3 rounded-2xl font-bold">✔ ยืนยัน</button>
-            </div>
         </div>
     </div>
 
+
+    <!-- =========================================================================
+         JAVASCRIPT ENGINE (จัดการ State, คำนวณ, และ Watermark Overlay)
+         ========================================================================= -->
     <script>
         const contractState = {
-            signatures: { landlord:{name:'', base64:'', idImg:''}, tenant:{name:'', base64:'', idImg:''}, wit1_ll:{name:'', base64:'', idImg:''}, wit1_tn:{name:'', base64:'', idImg:''}, wit2_ll:{name:'', base64:'', idImg:''}, wit2_tn:{name:'', base64:'', idImg:''} },
-            witnessImgs: {}
+            landlordImg: '', tenantImg: '',
+            witnessImgs: { wit1_ll: '', wit1_tn: '', wit2_ll: '', wit2_tn: '' }, // <-- NEW ถังเก็บรูปบัตรพยาน
+            signatures: {
+                landlord: { name: '', base64: '' },
+                tenant: { name: '', base64: '' },
+                wit1_ll: { name: '', base64: '' },
+                wit1_tn: { name: '', base64: '' },
+                wit2_ll: { name: '', base64: '' },
+                wit2_tn: { name: '', base64: '' }
+            }
         };
 
         let currentSigningTarget = '';
-        let tempWitnessIdImg = '';
 
-        function openSigPad(roleKey, roleTitle) {
-            currentSigningTarget = roleKey;
-            document.getElementById('pad-title').innerText = `ลงนาม: ${roleTitle}`;
-            
-            // แสดงช่องแนบบัตรถ้าเป็นพยาน (wit)
-            const kycBox = document.getElementById('witness-kyc-box');
-            if(roleKey.includes('wit')) {
-                kycBox.classList.remove('hidden');
-            } else {
-                kycBox.classList.add('hidden');
+        document.addEventListener("DOMContentLoaded", function() {
+            const now = new Date();
+            document.getElementById('in-doc-date').value = formatDateISO(now);
+            let nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            document.getElementById('in-start-date').value = formatDateISO(nextMonth);
+
+            const dueDateSelect = document.getElementById('in-due-date');
+            for (let i = 1; i <= 31; i++) {
+                const opt = document.createElement('option');
+                opt.value = i; opt.text = `วันที่ ${i} ของทุกเดือน (${i}${getOrdinalSuffix(i)} of every month)`;
+                if (i === 5) opt.selected = true;
+                dueDateSelect.add(opt);
             }
-            
-            document.getElementById('modal-sigpad').classList.remove('hidden');
+
+            setupImageUploader('in-landlord-img', 'thumb-ll', 'thumb-ll-box', 'landlordImg');
+            setupImageUploader('in-tenant-img', 'thumb-tn', 'thumb-tn-box', 'tenantImg');
+
+            initCanvasDrawing();
+            updateEndDate();
+            updateFinancials();
+        });
+
+        function updateBannerLoc() {
+            document.getElementById('banner-loc').innerText = document.getElementById('in-location').value || '-';
         }
 
-        function previewWitnessId(e) {
+        function getOrdinalSuffix(i) {
+            let j = i % 10, k = i % 100;
+            if (j == 1 && k != 11) return "st";
+            if (j == 2 && k != 12) return "nd";
+            if (j == 3 && k != 13) return "rd";
+            return "th";
+        }
+
+        function formatDateISO(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDateTH(iso) {
+            if(!iso) return '-';
+            const [y, m, d] = iso.split('-').map(Number);
+            const thM = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            return `${d} ${thM[m]} ${y + 543}`;
+        }
+
+        function formatDateEN(iso) {
+            if(!iso) return '-';
+            const [y, m, d] = iso.split('-').map(Number);
+            const enM = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return `${enM[m]} ${d}, ${y}`;
+        }
+
+        function updateEndDate() {
+            const startStr = document.getElementById('in-start-date').value;
+            const duration = document.getElementById('in-duration').value;
+            const endInput = document.getElementById('in-end-date');
+            if(!startStr) return;
+            let [y, m, d] = startStr.split('-').map(Number);
+            let date = new Date(y, m - 1, d);
+
+            if(duration === 'custom') { endInput.readOnly = false; return; } 
+            else { endInput.readOnly = true; }
+
+            if(duration === '1m') date.setMonth(date.getMonth() + 1);
+            else if(duration === '3m') date.setMonth(date.getMonth() + 3);
+            else if(duration === '6m') date.setMonth(date.getMonth() + 6);
+            else if(duration === '1y') date.setFullYear(date.getFullYear() + 1);
+
+            endInput.value = formatDateISO(date);
+        }
+
+        function updateFinancials() {
+            const rent = parseFloat(document.getElementById('in-rent').value) || 0;
+            const months = parseInt(document.getElementById('in-deposit-months').value) || 2;
+            const deposit = rent * months;
+            const grandTotal = rent + deposit;
+
+            document.getElementById('lbl-rent-amt').innerText = rent.toLocaleString('th-TH') + ' THB';
+            document.getElementById('lbl-dep-count').innerText = months;
+            document.getElementById('lbl-dep-amt').innerText = deposit.toLocaleString('th-TH') + ' THB';
+            document.getElementById('lbl-grand-total').innerText = grandTotal.toLocaleString('th-TH') + ' THB';
+            document.getElementById('lbl-baht-th').innerText = ThaiBahtText(grandTotal);
+        }
+
+        function setupImageUploader(inputId, thumbImgId, thumbBoxId, memKey) {
+            document.getElementById(inputId).addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        contractState[memKey] = event.target.result;
+                        document.getElementById(thumbImgId).src = event.target.result;
+                        document.getElementById(thumbBoxId).classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // --- NEW [แก้ไขจุดที่ 1] ฟังก์ชันอัปโหลดรูปบัตร ปชช. พยานลง Memory ---
+        function uploadWitnessId(e, roleKey) {
             const file = e.target.files[0];
             if(file) {
                 const reader = new FileReader();
-                reader.onload = (evt) => {
-                    tempWitnessIdImg = evt.target.result;
-                    const preview = document.getElementById('witness-id-preview');
-                    preview.src = tempWitnessIdImg;
-                    preview.classList.remove('hidden');
+                reader.onload = function(evt) {
+                    contractState.witnessImgs[roleKey] = evt.target.result;
+                    // เปลี่ยนปุ่มเป็นป้ายเขียว ✔ อัปโหลดแล้ว
+                    const badge = document.getElementById(`badge-${roleKey}`);
+                    badge.innerHTML = `<span>✔ แนบรูปแล้ว</span>`;
+                    badge.className = "bg-emerald-50 text-emerald-700 font-extrabold px-2 py-0.5 rounded-lg border border-emerald-300 text-[11px] shadow-sm";
+                    
+                    // สั่งอัปเดตแผ่นกระดาษภาคผนวกด้านล่างทันที
+                    renderAttachments();
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function commitSignature() {
-            const name = document.getElementById('pad-printed-name').value;
-            const canvas = document.getElementById('canvas-surface');
-            const data = canvas.toDataURL();
+        function setAllElements(cls, val) {
+            document.querySelectorAll('.' + cls).forEach(el => el.innerText = val);
+        }
+
+        function toggleRBAC() {
+            const mode = document.getElementById('sim-view-mode').value;
+            const btnPrint = document.getElementById('btn-print-pdf');
+            const btnBack = document.getElementById('btn-back-edit');
+
+            if(mode === 'client') {
+                btnPrint.style.display = 'none';
+                btnBack.style.display = 'none';
+                alert('📱 สลับเข้าสู่โหมด "มุมมองลูกค้า"\\n\\nปุ่ม [พิมพ์ PDF] และปุ่ม [กลับไปแก้ฟอร์ม] จะถูกซ่อนทิ้งทันที ลูกค้าจะมีหน้าที่แค่อ่านสัญญาและกดเซ็นชื่อเท่านั้นครับ');
+            } else {
+                btnPrint.style.display = 'flex';
+                btnBack.style.display = 'flex';
+            }
+        }
+
+        function generateContract() {
+            const locVal = document.getElementById('in-location').value || 'อำเภอหัวหิน จ.ประจวบคีรีขันธ์';
+            const docDate = document.getElementById('in-doc-date').value;
+            const dueDay = parseInt(document.getElementById('in-due-date').value) || 5;
             
-            contractState.signatures[currentSigningTarget] = { 
-                name: name, 
-                base64: data, 
-                idImg: tempWitnessIdImg 
-            };
+            const pNo = document.getElementById('in-prop-no').value || '-';
+            const pProj = document.getElementById('in-prop-project').value || '-';
+            const pSub = document.getElementById('in-prop-subdist').value || '-';
+            const pDist = document.getElementById('in-prop-dist').value || '-';
+            const pProv = document.getElementById('in-prop-prov').value || '-';
+            const pZip = document.getElementById('in-prop-zip').value || '-';
+
+            const llName = document.getElementById('in-landlord-name').value;
+            const llId = document.getElementById('in-landlord-id').value;
+            const llPhone = document.getElementById('in-landlord-phone').value || '-';
+            const llAddress = document.getElementById('in-landlord-address').value;
+
+            const tnName = document.getElementById('in-tenant-name').value;
+            const tnId = document.getElementById('in-tenant-id').value;
+            const tnPhone = document.getElementById('in-tenant-phone').value || '-';
+            const tnNat = document.getElementById('in-tenant-nat').value;
+            const tnDob = document.getElementById('in-tenant-dob').value;
+
+            const startDate = document.getElementById('in-start-date').value;
+            const endDate = document.getElementById('in-end-date').value;
+            const durKey = document.getElementById('in-duration').value;
+            const durMapTH = { '1m':'1 เดือน', '3m':'3 เดือน', '6m':'6 เดือน', '1y':'1 ปี', 'custom':'ตามกำหนด' };
+            const durMapEN = { '1m':'1 Month', '3m':'3 Months', '6m':'6 Months', '1y':'1 Year', 'custom':'Custom Period' };
+
+            const rent = parseFloat(document.getElementById('in-rent').value) || 0;
+            const depMonths = parseInt(document.getElementById('in-deposit-months').value) || 2;
+            const depositAmt = rent * depMonths;
+            const grandTotal = rent + depositAmt;
+            const dailyLateFee = (rent * 0.0125 / 30).toFixed(2);
+
+            document.getElementById('cv-location').innerText = locVal;
+            document.getElementById('cv-doc-date').innerText = `${formatDateTH(docDate)} (${formatDateEN(docDate)})`;
             
-            // รีเซ็ตค่า
-            tempWitnessIdImg = '';
-            document.getElementById('witness-id-preview').classList.add('hidden');
-            closeSigPad();
-            renderAll();
+            document.getElementById('cv-landlord-name').innerText = llName;
+            document.getElementById('cv-landlord-id').innerText = llId;
+            document.getElementById('cv-landlord-phone').innerText = llPhone;
+            document.getElementById('cv-landlord-address').innerText = llAddress;
+            document.getElementById('cv-attach-ll-name').innerText = llName;
+
+            document.getElementById('cv-tenant-name').innerText = tnName;
+            document.getElementById('cv-tenant-id').innerText = tnId;
+            document.getElementById('cv-tenant-phone').innerText = tnPhone;
+            document.getElementById('cv-tenant-nat').innerText = tnNat;
+            document.getElementById('cv-tenant-dob').innerText = `${formatDateTH(tnDob)} (${formatDateEN(tnDob)})`;
+            document.getElementById('cv-attach-tn-name').innerText = tnName;
+
+            document.getElementById('cv-dep-label').innerText = `(เท่ากับค่าเช่า ${depMonths} เดือน / Equivalent to ${depMonths} months rent)`;
+            document.getElementById('cv-grand-total').innerText = grandTotal.toLocaleString('th-TH') + ' บาท (THB)';
+            document.getElementById('cv-baht-text-th').innerText = `(${ThaiBahtText(grandTotal)})`;
+            document.getElementById('cv-baht-text-en').innerText = `(${EnglishBahtText(grandTotal)})`;
+
+            setAllElements('c-prop-no', pNo); setAllElements('c-prop-project', pProj); setAllElements('c-prop-subdist', pSub);
+            setAllElements('c-prop-dist', pDist); setAllElements('c-prop-prov', pProv); setAllElements('c-prop-zip', pZip);
+            setAllElements('c-rent-amt', rent.toLocaleString('th-TH')); setAllElements('c-rent-th-txt', ThaiBahtText(rent)); setAllElements('c-rent-en-txt', EnglishBahtText(rent));
+            setAllElements('c-dur-th', durMapTH[durKey] || durKey); setAllElements('c-dur-en', durMapEN[durKey] || durKey);
+            setAllElements('c-start-th', formatDateTH(startDate)); setAllElements('c-start-en', formatDateEN(startDate));
+            setAllElements('c-end-th', formatDateTH(endDate)); setAllElements('c-end-en', formatDateEN(endDate));
+            setAllElements('c-due-th', dueDay); setAllElements('c-due-en', dueDay + getOrdinalSuffix(dueDay));
+            setAllElements('c-late-fee', dailyLateFee);
+            setAllElements('c-dep-amt', depositAmt.toLocaleString('th-TH')); setAllElements('c-dep-th-txt', ThaiBahtText(depositAmt)); setAllElements('c-dep-en-txt', EnglishBahtText(depositAmt));
+
+            contractState.signatures.landlord.name = contractState.signatures.landlord.name || llName;
+            contractState.signatures.tenant.name = contractState.signatures.tenant.name || tnName;
+            
+            renderAllSignatureBoxes();
+            renderAttachments();
+
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToStep1() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function shareContractLink() {
+            console.log("PAYLOAD READY FOR BACKEND:", contractState);
+            alert('🔗 ระบบพร้อมส่งข้อมูลขึ้น Cloud!\\n\\nในสถาปัตยกรรมจริงของ HuaHin-Property.ai ระบบจะนำ JSON Object นี้ส่งไปบันทึกลง Firebase Firestore Document (เช่น /contracts/doc_88_9) แล้วส่งลิงก์ URL สั้นผ่าน LINE Messaging API ให้ลูกค้าเปิดดูได้ทันทีครับ');
+        }
+
+        // =========================================================================
+        //  CANVAS DRAWING ENGINE
+        // =========================================================================
+        let canvasEl, canvasCtx;
+        let isDrawing = false;
+
+        function initCanvasDrawing() {
+            canvasEl = document.getElementById('canvas-surface');
+            canvasCtx = canvasEl.getContext('2d');
+            canvasCtx.lineWidth = 3.5;
+            canvasCtx.lineCap = 'round';
+            canvasCtx.strokeStyle = '#0284c7';
+
+            canvasEl.addEventListener('mousedown', startDrawing);
+            canvasEl.addEventListener('mousemove', draw);
+            canvasEl.addEventListener('mouseup', stopDrawing);
+            canvasEl.addEventListener('mouseout', stopDrawing);
+
+            canvasEl.addEventListener('touchstart', function(e) { e.preventDefault(); startDrawing(e.touches[0]); }, { passive: false });
+            canvasEl.addEventListener('touchmove', function(e) { e.preventDefault(); draw(e.touches[0]); }, { passive: false });
+            canvasEl.addEventListener('touchend', stopDrawing);
+        }
+
+        function getMousePos(evt) {
+            const rect = canvasEl.getBoundingClientRect();
+            return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true; const pos = getMousePos(e);
+            canvasCtx.beginPath(); canvasCtx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return; const pos = getMousePos(e);
+            canvasCtx.lineTo(pos.x, pos.y); canvasCtx.stroke();
+        }
+
+        function stopDrawing() { isDrawing = false; }
+        function clearSigCanvas() { canvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height); }
+
+        function openSigPad(roleKey, roleTitle) {
+            currentSigningTarget = roleKey;
+            document.getElementById('pad-title').innerText = `ลงนาม: ${roleTitle}`;
+            document.getElementById('pad-printed-name').value = contractState.signatures[roleKey].name;
+            clearSigCanvas();
+            document.getElementById('modal-sigpad').classList.remove('hidden');
         }
 
         function closeSigPad() { document.getElementById('modal-sigpad').classList.add('hidden'); }
 
-        function renderAll() {
-            // อัปเดต UI หน้าสัญญาหลัก
-            Object.keys(contractState.signatures).forEach(key => {
-                const sig = contractState.signatures[key];
-                if(sig.base64) {
-                    const canvasBox = document.getElementById(`sig-canvas-${key}`);
-                    if(canvasBox) canvasBox.innerHTML = `<img src="${sig.base64}" class="h-16">`;
+        function commitSignature() {
+            const printedName = document.getElementById('pad-printed-name').value.trim();
+            const blank = document.createElement('canvas');
+            blank.width = canvasEl.width; blank.height = canvasEl.height;
+            const isCanvasEmpty = (canvasEl.toDataURL() === blank.toDataURL());
+
+            let finalBase64 = contractState.signatures[currentSigningTarget].base64;
+            if(!isCanvasEmpty) finalBase64 = canvasEl.toDataURL('image/png');
+
+            contractState.signatures[currentSigningTarget] = { name: printedName, base64: finalBase64 };
+            renderAllSignatureBoxes();
+            renderAttachments();
+            closeSigPad();
+        }
+
+        function renderAllSignatureBoxes() {
+            const roles = ['landlord', 'tenant', 'wit1_ll', 'wit1_tn', 'wit2_ll', 'wit2_tn'];
+            const defaultLabels = { wit1_ll:'พยานฝ่ายผู้ให้เช่า 1', wit1_tn:'พยานฝ่ายผู้เช่า 1', wit2_ll:'พยานฝ่ายผู้ให้เช่า 2', wit2_tn:'พยานฝ่ายผู้เช่า 2' };
+
+            roles.forEach(r => {
+                const targetCanvasBox = document.getElementById(`sig-canvas-${r}`);
+                const targetNameSpan = document.getElementById(`sig-name-${r}`);
+                const sigData = contractState.signatures[r];
+
+                if(sigData.base64) {
+                    targetCanvasBox.innerHTML = `<img src="${sigData.base64}" class="max-h-16 w-auto mx-auto py-0.5 animate-in zoom-in-50 duration-200" />`;
+                    targetCanvasBox.classList.remove('border-dashed', 'border-blue-400', 'border-emerald-400', 'border-slate-300');
+                    targetCanvasBox.classList.add('border-solid', 'border-slate-200', 'bg-white/80');
+                }
+
+                if(sigData.name) targetNameSpan.innerText = sigData.name;
+                else if(defaultLabels[r]) targetNameSpan.innerText = defaultLabels[r];
+            });
+        }
+
+        // --- NEW [แก้ไขจุดที่ 2] ฟังก์ชันคำนวณและประทับลายเซ็นลงแผ่นกระดาษแนบท้ายทั้ง 6 แผ่น ---
+        function renderAttachments() {
+            const map = [
+                { role: 'landlord', img: contractState.landlordImg, defaultTitle: "ผู้ให้เช่า (Landlord)" },
+                { role: 'tenant', img: contractState.tenantImg, defaultTitle: "ผู้เช่า (Tenant)" },
+                { role: 'wit1_ll', img: contractState.witnessImgs.wit1_ll, defaultTitle: "พยานฝ่ายผู้ให้เช่า 1" },
+                { role: 'wit1_tn', img: contractState.witnessImgs.wit1_tn, defaultTitle: "พยานฝ่ายผู้เช่า 1" },
+                { role: 'wit2_ll', img: contractState.witnessImgs.wit2_ll, defaultTitle: "พยานฝ่ายผู้ให้เช่า 2" },
+                { role: 'wit2_tn', img: contractState.witnessImgs.wit2_tn, defaultTitle: "พยานฝ่ายผู้เช่า 2" }
+            ];
+
+            map.forEach(item => {
+                const sheetEl = document.getElementById(`sheet-${item.role}`);
+                const imgEl = document.getElementById(`print-img-${item.role}`);
+                const noEl = document.getElementById(`print-no-${item.role}`);
+                const wmGroup = document.getElementById(`wm-group-${item.role}`);
+                const wmSig = document.getElementById(`wm-sig-${item.role}`);
+                const wmName = document.getElementById(`wm-name-${item.role}`);
+
+                const sigData = contractState.signatures[item.role];
+
+                // ถ้าเป็นแผ่นของพยาน และยังไม่ได้อัปรูปบัตร ให้ซ่อนทั้งแผ่นทิ้งไปเลย (ไม่เปลืองกระดาษตอนปริ้น)
+                if(sheetEl) {
+                    if(item.img) sheetEl.classList.remove('hidden');
+                    else sheetEl.classList.add('hidden');
+                }
+
+                if(item.img) {
+                    imgEl.src = item.img; imgEl.classList.remove('hidden');
+                    if(noEl) noEl.classList.add('hidden');
+
+                    // ตรวจสอบว่า "เซ็นชื่อบนกระดานแล้วหรือยัง?" ถ้าเซ็นแล้วให้เปิด Watermark ทับทันที!
+                    if(sigData && sigData.base64) {
+                        wmSig.src = sigData.base64;
+                        wmName.innerText = `( ${sigData.name || item.defaultTitle} )`;
+                        wmGroup.classList.remove('hidden');
+                    } else {
+                        wmGroup.classList.add('hidden');
+                    }
+                } else {
+                    imgEl.classList.add('hidden');
+                    if(noEl) noEl.classList.remove('hidden');
+                    wmGroup.classList.add('hidden');
                 }
             });
         }
 
-        function generateContract() {
-            // (ฟังก์ชันเดิมที่เหลือคงไว้ครบถ้วน)
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
+        function downloadPDF() {
+            const oldTitle = document.title;
+            const rawTnName = document.getElementById('in-tenant-name').value;
+            const cleanName = rawTnName.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+            document.title = `Rental_Agreement_${cleanName}`;
+            window.print();
+            document.title = oldTitle;
         }
-        
-        // ฟังก์ชันอื่นๆ (เช่น Canvas, การคำนวณ) ใส่ไว้ที่นี่เหมือนเดิมทุกประการ...
-        // ... (คง Logic เดิม 100%)
+
+        async function shareContract() {
+            const llName = document.getElementById('in-landlord-name').value;
+            const tnName = document.getElementById('in-tenant-name').value;
+            const total = document.getElementById('cv-grand-total').innerText;
+            const shareText = `รายละเอียดสัญญาเช่าที่พักอาศัย (Lease Agreement Summary)\nผู้ให้เช่า: ${llName}\nผู้เช่า: ${tnName}\nยอดชำระสุทธิ: ${total}\n\n*สามารถกด 'ดาวน์โหลด PDF' จากระบบเพื่อบันทึกไฟล์ฉบับเต็มได้ทันที*`;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: 'Lease Agreement', text: shareText, url: window.location.href });
+                } catch (err) { console.log('Share canceled', err); }
+            } else {
+                alert('ระบบปฏิบัติการของคุณไม่รองรับปุ่มแชร์ด่วน\nกรุณากดปุ่ม "📥 ดาวน์โหลด PDF" แล้วกดแชร์ไฟล์จากในเครื่องแทนครับ');
+            }
+        }
+
+        function ThaiBahtText(num) {
+            if (num === 0) return "ศูนย์บาทถ้วน";
+            let str = Math.floor(num).toString();
+            const units = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"];
+            const numbers = ["", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"];
+            let result = ""; let len = str.length;
+            for (let i = 0; i < len; i++) {
+                let n = parseInt(str.charAt(i)); let pos = len - i - 1;
+                if (n !== 0) {
+                    if (pos === 0 && n === 1 && len > 1 && str.charAt(i-1) !== '0') result += "เอ็ด";
+                    else if (pos === 1 && n === 1) result += "";
+                    else if (pos === 1 && n === 2) result += "ยี่";
+                    else result += numbers[n];
+                    result += units[pos % 6];
+                }
+                if (pos > 0 && pos % 6 === 0 && len > 6) result += "ล้าน";
+            }
+            return result + "บาทถ้วน";
+        }
+
+        function EnglishBahtText(n) {
+            if (n === 0) return "Zero Baht Only";
+            const engArr = x => {
+                const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+                const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+                if (x < 20) return a[x];
+                if (x < 100) return b[Math.floor(x / 10)] + (x % 10 ? " " + a[x % 10] : "");
+                if (x < 1000) return a[Math.floor(x / 100)] + " Hundred" + (x % 100 ? " " + engArr(x % 100) : "");
+                if (x < 1000000) return engArr(Math.floor(x / 1000)) + " Thousand" + (x % 1000 ? " " + engArr(x % 1000) : "");
+                return engArr(Math.floor(x / 1000000)) + " Million" + (x % 1000000 ? " " + engArr(x % 1000000) : "");
+            };
+            return engArr(Math.floor(n)) + " Baht Only";
+        }
     </script>
+
 </body>
 </html>
