@@ -3,47 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bilingual Rental Agreement (Full Version)</title>
+    <title>Smart Bilingual Rental Agreement (Master Version)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap'); body{font-family:'Sarabun',sans-serif; background-color:#f3f4f6;}</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
+        .contract-box { max-width: 800px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    </style>
 </head>
-<body class="p-4">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-2xl">
-        <h1 class="text-2xl font-bold mb-6 text-center">ระบบสัญญาเช่าอัจฉริยะ (ฉบับสมบูรณ์)</h1>
+<body class="p-6">
+    <div class="contract-box">
+        <h1 class="text-2xl font-bold mb-8 text-center text-indigo-900">ระบบสัญญาเช่าอัจฉริยะ (ฉบับสมบูรณ์)</h1>
         
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="border-2 border-dashed p-4 rounded-xl text-center">
-                <p class="text-sm mb-2">บัตรประชาชนผู้ให้เช่า</p>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="border-2 border-dashed border-gray-300 p-4 rounded-xl text-center">
+                <p class="text-xs mb-2">บัตรประชาชนผู้ให้เช่า</p>
                 <input type="file" accept="image/*" onchange="handleUpload(event, 'landlordImg', 'img-ll')">
                 <img id="img-ll" class="mt-2 h-20 mx-auto">
             </div>
-            <div class="border-2 border-dashed p-4 rounded-xl text-center">
-                <p class="text-sm mb-2">พาสปอร์ตผู้เช่า</p>
+            <div class="border-2 border-dashed border-gray-300 p-4 rounded-xl text-center">
+                <p class="text-xs mb-2">พาสปอร์ตผู้เช่า</p>
                 <input type="file" accept="image/*" onchange="handleUpload(event, 'tenantImg', 'img-tn')">
                 <img id="img-tn" class="mt-2 h-20 mx-auto">
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <input type="text" id="propNo" placeholder="บ้านเลขที่" class="border p-2 rounded">
-            <input type="text" id="propProj" placeholder="โครงการ" class="border p-2 rounded">
-            <input type="number" id="rentAmt" placeholder="ค่าเช่าต่อเดือน" oninput="calc()" class="border p-2 rounded">
-            <input type="number" id="depMonths" placeholder="เงินประกัน (เดือน)" oninput="calc()" class="border p-2 rounded">
-        </div>
-        <div class="mb-6 bg-blue-50 p-4 rounded-xl">
-            <p>รวมยอดแรกเข้า: <span id="totalDisplay" class="font-bold text-xl">0</span> บาท</p>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <input type="text" id="propNo" placeholder="บ้านเลขที่" class="border p-3 rounded-xl w-full">
+            <input type="text" id="propProj" placeholder="โครงการ" class="border p-3 rounded-xl w-full">
+            <input type="number" id="rentAmt" placeholder="ค่าเช่าต่อเดือน" oninput="calc()" class="border p-3 rounded-xl w-full">
+            <input type="number" id="depMonths" placeholder="เงินประกัน (เดือน)" oninput="calc()" class="border p-3 rounded-xl w-full">
         </div>
 
-        <div class="mb-6">
-            <canvas id="sig-pad" class="border w-full h-40 rounded-xl bg-gray-50"></canvas>
-            <button onclick="clearSig()" class="mt-2 text-sm text-red-500">ล้างลายเซ็น</button>
+        <div class="mb-8 bg-blue-50 p-6 rounded-2xl border border-blue-100">
+            <p class="text-lg">รวมยอดแรกเข้า: <span id="totalDisplay" class="font-bold text-2xl text-blue-900">0</span> บาท</p>
         </div>
 
-        <button id="saveBtn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold mb-4">🚀 บันทึกข้อมูลและลายเซ็นขึ้น Cloud</button>
-        <div class="grid grid-cols-2 gap-4">
-            <button id="copyLL" class="bg-emerald-600 text-white py-2 rounded-lg text-sm">🔗 ลิงก์เจ้าของบ้าน</button>
-            <button id="copyTN" class="bg-purple-600 text-white py-2 rounded-lg text-sm">🔗 ลิงก์ผู้เช่า</button>
+        <div class="mb-8">
+            <canvas id="sig-pad" class="border-2 border-slate-200 w-full h-40 rounded-2xl bg-white"></canvas>
+            <button onclick="clearSig()" class="mt-2 text-sm text-red-500 font-semibold">🗑️ ล้างลายเซ็น</button>
+        </div>
+
+        <button id="saveBtn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-500/30">🚀 บันทึกข้อมูลและลายเซ็นขึ้น Cloud</button>
+        
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <button id="copyLL" class="bg-emerald-600 text-white py-3 rounded-xl text-sm font-bold">🔗 ลิงก์เจ้าของบ้าน</button>
+            <button id="copyTN" class="bg-purple-600 text-white py-3 rounded-xl text-sm font-bold">🔗 ลิงก์ผู้เช่า</button>
         </div>
     </div>
 
@@ -63,15 +69,8 @@
         window.handleUpload = (e, key, imgId) => {
             const reader = new FileReader();
             reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 400; canvas.height = 200;
-                    canvas.getContext('2d').drawImage(img, 0, 0, 400, 200);
-                    localData[key] = canvas.toDataURL('image/jpeg', 0.5);
-                    document.getElementById(imgId).src = localData[key];
-                };
-                img.src = event.target.result;
+                localData[key] = event.target.result;
+                document.getElementById(imgId).src = event.target.result;
             };
             reader.readAsDataURL(e.target.files[0]);
         };
