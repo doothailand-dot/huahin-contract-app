@@ -3,89 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bilingual Rental Agreement (Master Version - Full Functions)</title>
+    <title>Master Rental Agreement - Full Version</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
         body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; }
-        .contract-box { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .sig-canvas { border: 2px dashed #cbd5e1; background: #fff; border-radius: 10px; width: 100%; height: 150px; }
+        .full-layout { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .hidden-role { display: none !important; }
     </style>
 </head>
-<body class="p-4 md:p-10">
-
-    <div id="app" class="contract-box">
-        <h1 class="text-2xl font-bold mb-8 text-center text-indigo-900">สัญญาเช่าที่พักอาศัยฉบับสมบูรณ์</h1>
+<body class="p-4">
+    <div class="full-layout" id="main-container">
+        <h1 class="text-3xl font-bold text-center mb-8">สัญญาเช่าที่พักอาศัย</h1>
         
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="border-2 border-dashed p-4 rounded-xl text-center"><p class="text-sm">บัตรประชาชนผู้ให้เช่า</p><input type="file" onchange="handleUpload(event, 'landlordImg', 'img-ll')"><img id="img-ll" class="mt-2 h-20 mx-auto"></div>
-            <div class="border-2 border-dashed p-4 rounded-xl text-center"><p class="text-sm">พาสปอร์ตผู้เช่า</p><input type="file" onchange="handleUpload(event, 'tenantImg', 'img-tn')"><img id="img-tn" class="mt-2 h-20 mx-auto"></div>
+        <div id="agent-tools" class="bg-gray-100 p-4 rounded-xl mb-6">
+            <p class="font-bold mb-2">เครื่องมือแอดมิน (เห็นเฉพาะแอดมิน):</p>
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="propNo" placeholder="บ้านเลขที่" class="border p-2 rounded">
+                <input type="number" id="rentAmt" placeholder="ค่าเช่า" class="border p-2 rounded">
+            </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <input type="text" id="propNo" placeholder="บ้านเลขที่" class="border p-3 rounded-xl">
-            <input type="text" id="propProj" placeholder="โครงการ" class="border p-3 rounded-xl">
-            <input type="number" id="rentAmt" placeholder="ค่าเช่า/เดือน" oninput="calc()" class="border p-3 rounded-xl">
-            <input type="number" id="depMonths" placeholder="ประกัน (เดือน)" oninput="calc()" class="border p-3 rounded-xl">
-        </div>
-
-        <div class="mb-8">
-            <canvas id="sig-pad" class="sig-canvas"></canvas>
-            <button onclick="clearSig()" class="mt-2 text-sm text-red-500">🗑️ ล้างลายเซ็น</button>
-        </div>
-
-        <button id="saveBtn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold mb-4">🚀 บันทึกข้อมูลและส่งข้อมูลขึ้น Cloud</button>
-        
-        <div class="grid grid-cols-2 gap-4">
-            <button id="copyLL" class="bg-emerald-600 text-white py-3 rounded-xl text-sm font-bold">🔗 ลิงก์สำหรับ [เจ้าของบ้าน]</button>
-            <button id="copyTN" class="bg-purple-600 text-white py-3 rounded-xl text-sm font-bold">🔗 ลิงก์สำหรับ [ผู้เช่า]</button>
+        <div id="contract-view" class="space-y-6">
+            <div id="signature-section" class="border-t pt-6">
+                <canvas id="sig-pad" class="border-2 border-dashed w-full h-40 rounded-xl bg-gray-50"></canvas>
+                <button onclick="clearSig()" class="text-red-500 text-sm mt-2">ล้างลายเซ็น</button>
+            </div>
+            
+            <button id="saveBtn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg">🚀 บันทึกและส่งข้อมูล</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import SignaturePad from "https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/+esm";
-
-        const firebaseConfig = { apiKey: "AIzaSyA123-Placeholder", authDomain: "huahin-contract-app.firebaseapp.com", projectId: "huahin-contract-app", storageBucket: "huahin-contract-app.appspot.com", appId: "1:1234567890:web:abcdef123456" };
-        const db = getFirestore(initializeApp(firebaseConfig));
         
+        const db = getFirestore(initializeApp({ apiKey: "AIzaSyA123-Placeholder", projectId: "huahin-contract-app" }));
         const urlParams = new URLSearchParams(window.location.search);
-        const contractId = urlParams.get('id') || 'doc_88_9';
-        const userRole = urlParams.get('role') || 'landlord';
+        const role = urlParams.get('role') || 'landlord';
+
+        // ปิดการแสดงผลปุ่ม/ฟอร์มตามบทบาท
+        if(role === 'tenant') {
+            document.getElementById('agent-tools').classList.add('hidden-role');
+        }
+
         const sigPad = new SignaturePad(document.getElementById('sig-pad'));
-        
-        let localData = { landlordImg: '', tenantImg: '' };
-
-        window.handleUpload = (e, key, imgId) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                localData[key] = event.target.result;
-                document.getElementById(imgId).src = event.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        };
-
-        window.calc = () => {
-            const total = (parseFloat(document.getElementById('rentAmt').value) || 0) * (1 + (parseInt(document.getElementById('depMonths').value) || 0));
-            document.getElementById('totalDisplay').innerText = total.toLocaleString();
-        };
-
         window.clearSig = () => sigPad.clear();
 
         document.getElementById('saveBtn').addEventListener('click', async () => {
             const data = {
                 propNo: document.getElementById('propNo').value,
-                rentAmt: document.getElementById('rentAmt').value,
-                ...localData
+                [role + 'Sig']: sigPad.toDataURL()
             };
-            if(!sigPad.isEmpty()) data[userRole + 'Sig'] = sigPad.toDataURL();
-            await setDoc(doc(db, "contracts", contractId), data, { merge: true });
-            alert("บันทึกสำเร็จ! ข้อมูลถูกส่งขึ้น Cloud เรียบร้อยแล้ว");
+            await setDoc(doc(db, "contracts", "doc_88_9"), data, { merge: true });
+            alert("บันทึกสำเร็จ");
         });
-
-        document.getElementById('copyLL').onclick = () => navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?id=' + contractId + '&role=landlord');
-        document.getElementById('copyTN').onclick = () => navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?id=' + contractId + '&role=tenant');
     </script>
 </body>
 </html>
