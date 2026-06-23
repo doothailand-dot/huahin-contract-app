@@ -12,7 +12,6 @@
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-2xl">
         <h1 class="text-2xl font-bold mb-6 text-center">ระบบสัญญาเช่าอัจฉริยะ (ฉบับสมบูรณ์)</h1>
         
-        <!-- 1. อัปโหลดรูปภาพ -->
         <div class="grid grid-cols-2 gap-4 mb-6">
             <div class="border-2 border-dashed p-4 rounded-xl text-center">
                 <p class="text-sm mb-2">บัตรประชาชนผู้ให้เช่า</p>
@@ -26,7 +25,6 @@
             </div>
         </div>
 
-        <!-- 2. ข้อมูลกรอก -->
         <div class="grid grid-cols-2 gap-4 mb-6">
             <input type="text" id="propNo" placeholder="บ้านเลขที่" class="border p-2 rounded">
             <input type="text" id="propProj" placeholder="โครงการ" class="border p-2 rounded">
@@ -37,13 +35,11 @@
             <p>รวมยอดแรกเข้า: <span id="totalDisplay" class="font-bold text-xl">0</span> บาท</p>
         </div>
 
-        <!-- 3. ลายเซ็น -->
         <div class="mb-6">
             <canvas id="sig-pad" class="border w-full h-40 rounded-xl bg-gray-50"></canvas>
             <button onclick="clearSig()" class="mt-2 text-sm text-red-500">ล้างลายเซ็น</button>
         </div>
 
-        <!-- 4. ปุ่มบันทึกและแชร์ -->
         <button id="saveBtn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold mb-4">🚀 บันทึกข้อมูลและลายเซ็นขึ้น Cloud</button>
         <div class="grid grid-cols-2 gap-4">
             <button id="copyLL" class="bg-emerald-600 text-white py-2 rounded-lg text-sm">🔗 ลิงก์เจ้าของบ้าน</button>
@@ -53,7 +49,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = { apiKey: "AIzaSyA123-Placeholder", authDomain: "huahin-contract-app.firebaseapp.com", projectId: "huahin-contract-app", storageBucket: "huahin-contract-app.appspot.com", appId: "1:1234567890:web:abcdef123456" };
         const db = getFirestore(initializeApp(firebaseConfig));
